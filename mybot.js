@@ -54,6 +54,25 @@ bot.on("message", msg => {
 		msg.channel.sendMessage("Username set!");
 
 	}
+	if (msg.content ===(prefix + "vc")){
+		channel = msg.member.voiceChannel;
+		channel.join()
+		.then(connection => {
+		console.log('Connected!');
+		return connection.playFile('song.mp3');
+	})
+		.catch(console.error);
+	}
+	if (msg.content ===(prefix + "prune")){
+		const params = message.content.split(" ").slice(1);
+		var messagecount = parseInt(params[0]);
+		message.channel.fetchMessages({limit: 100})
+		.then(messages => {
+			var msg_array = messages.array();
+			msg_array.length = messagecount + 1;
+			msg_array.deleteMessages(messages);
+		})
+	}
 });
 
 // Catches errors
