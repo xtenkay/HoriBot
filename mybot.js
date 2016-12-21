@@ -5,57 +5,47 @@ bot.on('ready', () => {
 	console.log('I am ready!');
 });
 
-bot.on("message", msg => {
-	// Sets prefix
-	let prefix = "!";
-
-	// Stop if message doesn't have the prefix
-	if(!msg.content.startsWith(prefix)) return;
-
-	// Stop if the message's author is a bot
-	if(msg.author.bot) return;
-
-	//Help Function
-	// This lists all commands available.
-	if (msg.content === (prefix + "help")){
-		msg.channel.sendMessage(
-			"The current commands are:\n\n**!ping** - Pong!\n\n**!bestgirl** - You know who that is!\n\n**!setAvatar** - Sets the bot's avatar.\n\n**!myAvatar** - Shows your avatar's URL\n\n**!setName** - Changes the bot's username."
-		);
-	}
-
-	//Ping Function
-	if(msg.content === (prefix + "ping")){
-		msg.channel.sendMessage("pong!");
-	}
+let prefix = "!";
+var response = {
+	"ping" : "pong!",
+	"help" : "The current commands are:\n\n**!ping** - Pong!\n\n**!bestgirl** - You know who that is!\n\n**!setAvatar** - Sets the bot's avatar.\n\n**!myAvatar** - Shows your avatar's URL\n\n**!setName** - Changes the bot's username.",
+	"bestgirl" : "Its me!",
 	
-	//Best Girl Function
-	if (msg.content === (prefix + "bestgirl")){
-		msg.channel.sendMessage("Its me!");
-	}
+};
 
-	// Set Avatar Function
-	if (msg.content.startsWith(prefix + "setAvatar")){
-		let args = msg.content.split(" ");
+bot.on('message', (message) => {
+	if (!message.content.startsWith(prefix)) return;
+	var content = message.content.substr(1);
+	if (content in response) {
+		message.channel.sendMessage(response[content]);
+}
+	//Set Avatar
+	if (message.content.startsWith(prefix + "setAvatar")){
+		let args = message.content.split(" ");
 		bot.user.setAvatar(args[1]);
-		console.log('New avatar set!');
-		msg.channel.sendMessage("Avatar set!");
-		
+		setTimeout(function(){
+			console.log('New avatar set!');
+			message.channel.sendMessage("Avatar set!");
+		}, 2000);
 	}
 
 	// User's Avatar Function
-	if (msg.content === (prefix + "myAvatar")) {
-		msg.channel.sendMessage(msg.author.avatarURL);
+	if (message.content === (prefix + "myAvatar")) {
+		message.channel.sendMessage(message.author.avatarURL);
 	}
 
 	// Username change Function
-	if (msg.content.startsWith (prefix + "setName")) {
-		let args = msg.content.split(" ");
+	if (message.content.startsWith (prefix + "setName")) {
+		let args = message.content.split(" ");
 		bot.user.setUsername(args[1]);
-		msg.channel.sendMessage("Username set!");
-
+		setTimeout(function() {
+			message.channel.sendMessage("Username set!");
+		}, 2000);
 	}
-	if (msg.content ===(prefix + "vc")){
-		channel = msg.member.voiceChannel;
+
+	// Join Vc and play .mp3
+	if (message.content ===(prefix + "vc")){
+		channel = message.member.voiceChannel;
 		channel.join()
 		.then(connection => {
 		console.log('Connected!');
@@ -63,17 +53,7 @@ bot.on("message", msg => {
 	})
 		.catch(console.error);
 	}
-	if (msg.content ===(prefix + "prune")){
-		const params = message.content.split(" ").slice(1);
-		var messagecount = parseInt(params[0]);
-		message.channel.fetchMessages({limit: 100})
-		.then(messages => {
-			var msg_array = messages.array();
-			msg_array.length = messagecount + 1;
-			msg_array.deleteMessages(messages);
-		})
-	}
-});
+})
 
 // Catches errors
 bot.on('error', e => { console.error(e); });
