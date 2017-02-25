@@ -1,0 +1,6 @@
+{
+	"token":"YOUR-TOKEN-HERE",
+	"prefix":"!",
+	"arraySize":"AMMOUNT-OF-SONGS-TO-NOT-PLAY-BEFORE-REPEAT(NUMBER)",
+	"songAmmount":"HOW-MANY-SONGS-YOU-HAVE"
+}

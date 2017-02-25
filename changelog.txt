@@ -1,0 +1,36 @@
+
+// CHANGELOG - Tenkay Bot //
+
+|v0.1 
+
+	- Just testing stuff out
+	- Commands like !prune,!connect,!id,!help working
+	
+	
+	
+|v0.2
+
+	- Added commands:
+		!help
+		!setavatar
+		!setname
+		!myavatar
+		!id
+		!prune
+		!connect
+		!prefix
+		!dc
+		!pause
+		!resume
+		!volume
+		!skip
+		!encore
+		!roleid
+	
+	- Bot only works on AA for now.
+	
+	- Planned changes are:
+		• Rewrite some functions (Sloopy coding);
+		• Make it play youtube links;
+		• Make the bot work on any server with minimum configuration;
+		• Make the bot show last 5 played songs and maybe upcoming song;
