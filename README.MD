@@ -1,4 +1,4 @@
-# // Tenkay's Bot //--------------
+# Tenkay's Bot 
 
 Current version: v0.2 - Already better than Rhino's edition.
 
