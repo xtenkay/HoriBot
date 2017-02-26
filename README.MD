@@ -11,15 +11,16 @@ The purpose of this bot is to play songs without being shitty and replaying the 
 		!myavatar
 		!id
 		!prune
-		!connect
+		!roleid
 		!prefix
+		!connect
 		!dc
 		!pause
 		!resume
 		!volume
 		!skip
 		!encore
-		!roleid
+		!back
 
 # Planned changes
 		• Rewrite some functions (Sloopy coding);
