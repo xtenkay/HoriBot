@@ -1,6 +1,6 @@
 # Tenkay's Bot 
 
-Current version: v0.2 - Already better than Rhino's edition.
+Current version: v0.3 - Already better than Rhino's edition.
 
 The purpose of this bot is to play songs without being shitty and replaying the same fucking songs over and over.
 
