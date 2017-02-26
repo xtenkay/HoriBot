@@ -13,10 +13,12 @@ var songArray = [];
 var vcConnection;
 var dispatcher;
 var encorePoints = 0;
+var lastPlayed;
+var currentlyPlayed;
 var response = {
 	"ping" : "pong!",
-	"help" : "```\n"+
-	"The current commands are:"+
+	"help" : ""+
+	"**GENERAL COMMANDS**"+
 	"\n\n!help - This command!"+
 	"\n\n!setavatar - Sets the bot's avatar."+
 	"\n\n!setname - Changes the bot's username."+
@@ -24,8 +26,9 @@ var response = {
 	"\n\n!id - Shows the ID of an user. (Yours if you don't specify an user)"+
 	"\n\n!prune - Prunes chat messages."+
 	"\n\n!prefix - Changes the bot's prefix"+
+	"\n\n!roleid - Gets a role's ID (Only on console)"+
 	"\n\n"+
-	"VOICE COMMANDS:"+
+	"**VOICE COMMANDS:**"+
 	"\n\n!connect - Joins VC and starts playing something"+
 	"\n\n!dc - Disconnects from Voice Channel"+
 	"\n\n!pause - Pauses the current song"+
@@ -33,7 +36,7 @@ var response = {
 	"\n\n!volume - Changes the volume ( 0-100 )"+
 	"\n\n!skip - Skips the current song"+
 	"\n\n!encore - Repeats the current song a number of times (1 for once, 2 for twice,etc.)"+
-	"\n\n!roleid - Gets a role's ID (Only on console)",
+	"\n\n!back - Goes back to the last played song",
 
 	"bestgirl" : "2B Best Girl!!!! https://i.redd.it/21fcnhub75dy.gif",
 };
@@ -192,13 +195,21 @@ bot.on('message', (message) => {
 	}
 
 	if (message.content === (config.prefix + "teste")){
-		console.log(message.guild.roles.find("name", "City Hall"));
+		console.log(lastPlayed);
 	}
 
 	if (message.content.startsWith(config.prefix + "roleid")){
 		console.log(message.guild.roles.find("name", args[1] ));
 	}
 
+	if (message.content === (config.prefix + "back")){
+		console.log("///////////////////////BACK FUNCTION CALLED////////////////////// ");
+		currentlyPlayed = songArray.pop();
+		lastPlayed = songArray.pop();
+		console.log("Last Played is "+lastPlayed);
+		console.log("Currently Played is "+currentlyPlayed);
+		skipSong();
+	}
 
 // FUNCTIONS ----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -239,15 +250,34 @@ bot.on('message', (message) => {
 	}
 
 	function skipSong(){
+		console.log("------------- Function SkipSong called! ----------");
 		pausePlaying();
-		if (encorePoints === 0){
+		dispatcher = null;
+		if ((encorePoints === 0) && (currentlyPlayed === undefined) && (lastPlayed === undefined)){
 			shuffleSongNumber();
+		}
+		if (currentlyPlayed != undefined ){
+			if(lastPlayed != undefined){
+				songNumber = lastPlayed;
+				lastPlayed = undefined;
+			} else{
+				songNumber = currentlyPlayed;
+				currentlyPlayed = undefined;
+			}
 		}
 		if (encorePoints > 0){
 			encorePoints--;
 		}
 		setTimeout(function() {
+			dispatcher = null;
 			dispatcher = vcConnection.playFile('C:/Dev/HoriBot/sound/' + getSong() +'.mp3');
+			console.log("Current song is: " + songList[songNumber]);
+			console.log("Encore points are: "+encorePoints);
+			console.log("Last Played is "+lastPlayed);
+			console.log("Currently Played is "+currentlyPlayed);
+			dispatcher.on('end', () => {
+				startPlaying();
+			});
 		}, 2000);
 	}
 
@@ -257,8 +287,17 @@ bot.on('message', (message) => {
 
 	function startPlaying(){
 		dispatcher = null;
-		if (encorePoints === 0){
+		if ((encorePoints === 0) && (lastPlayed === undefined)) {
 			shuffleSongNumber();
+		}
+		if (currentlyPlayed != undefined ){
+			if(lastPlayed != undefined){
+				songNumber = lastPlayed;
+				lastPlayed = undefined;
+			} else{
+				songNumber = currentlyPlayed;
+				currentlyPlayed = undefined;
+			}
 		}
 		var dispatcher =vcConnection.playFile('C:/Dev/HoriBot/sound/' + getSong() +'.mp3');
 		if (encorePoints > 0){
@@ -266,6 +305,8 @@ bot.on('message', (message) => {
 		}
 		console.log("Current song is: " + songList[songNumber]);
 		console.log("Encore points are: "+encorePoints);
+		console.log("Last Played is "+lastPlayed);
+		console.log("Currently Played is "+currentlyPlayed);
 		
 		dispatcher.on('end', () => {
 			startPlaying();
