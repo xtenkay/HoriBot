@@ -15,6 +15,7 @@ var dispatcher;
 var encorePoints = 0;
 var lastPlayed;
 var currentlyPlayed;
+
 var response = {
 	"ping" : "pong!",
 	"help" : ""+
@@ -145,7 +146,7 @@ bot.on('message', (message) => {
 			console.log("Joining the channel: "+voiceChannel.name);
 			
 			shuffleSongNumber();
-			dispatcher = vcConnection.playFile('C:/Dev/HoriBot/sound/' + getSong() +'.mp3');
+			dispatcher = vcConnection.playFile('./sound/' + getSong() +'.mp3');
 
 			dispatcher.on('end', () => {
 				startPlaying();
@@ -251,6 +252,7 @@ bot.on('message', (message) => {
 
 	function skipSong(){
 		console.log("------------- Function SkipSong called! ----------");
+		encorePoints = 0;
 		pausePlaying();
 		dispatcher = null;
 		if ((encorePoints === 0) && (currentlyPlayed === undefined) && (lastPlayed === undefined)){
@@ -270,7 +272,7 @@ bot.on('message', (message) => {
 		}
 		setTimeout(function() {
 			dispatcher = null;
-			dispatcher = vcConnection.playFile('C:/Dev/HoriBot/sound/' + getSong() +'.mp3');
+			dispatcher = vcConnection.playFile('./sound/' + getSong() +'.mp3');
 			console.log("Current song is: " + songList[songNumber]);
 			console.log("Encore points are: "+encorePoints);
 			console.log("Last Played is "+lastPlayed);
@@ -278,7 +280,7 @@ bot.on('message', (message) => {
 			dispatcher.on('end', () => {
 				startPlaying();
 			});
-		}, 2000);
+		}, 1000);
 	}
 
 	function nowPlaying(){
@@ -292,14 +294,16 @@ bot.on('message', (message) => {
 		}
 		if (currentlyPlayed != undefined ){
 			if(lastPlayed != undefined){
+				encorePoints = 0;
 				songNumber = lastPlayed;
 				lastPlayed = undefined;
 			} else{
+				encorePoints = 0;
 				songNumber = currentlyPlayed;
 				currentlyPlayed = undefined;
 			}
 		}
-		var dispatcher =vcConnection.playFile('C:/Dev/HoriBot/sound/' + getSong() +'.mp3');
+		dispatcher =vcConnection.playFile('./sound/' + getSong() +'.mp3');
 		if (encorePoints > 0){
 			encorePoints--;
 		}
